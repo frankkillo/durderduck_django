@@ -22,11 +22,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = ''
 
+TELEGRAM_BOT_URL = ""
+TELEGRAM_TOKEN = ""
+PROVIDER_TOKEN = ""
+WEB_APP = ""
+
+CORS_ALLOWED_ORIGINS = []
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -43,6 +49,7 @@ INSTALLED_APPS = [
     'djoser',
     'versatileimagefield',
     'product',
+    'order',
 ]
 
 MIDDLEWARE = [
@@ -87,7 +94,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -112,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -133,10 +139,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080"
-]
-
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
@@ -144,4 +146,22 @@ REST_FRAMEWORK = {
     ]
 }
 
+try:
+    from durgerduck_django import prod
 
+    SECRET_KEY = prod.PROD_SECRET_KEY
+
+    TELEGRAM_BOT_URL = prod.PROD_TELEGRAM_BOT_URL
+    TELEGRAM_TOKEN = prod.PROD_TELEGRAM_TOKEN
+    PROVIDER_TOKEN = prod.PROD_PROVIDER_TOKEN
+    WEB_APP = prod.PROD_WEB_APP
+
+    CORS_ALLOWED_ORIGINS = prod.PROD_CORS_ALLOWED_ORIGINS
+
+    DEBUG = prod.PROD_DEBUG
+
+    ALLOWED_HOSTS = prod.PROD_ALLOWED_HOSTS
+
+    DATABASES = prod.PROD_DATABASES
+except:
+    print("Prod conf doesn't exist")
